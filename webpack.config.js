@@ -1,9 +1,7 @@
-// webpack.config.js
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode: "development",
   entry: "./src/index.js",
   output: {
     filename: "main.js",
@@ -12,7 +10,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/template.html",
+      template: "./src/index.html",
     }),
   ],
   module: {
@@ -23,4 +21,5 @@ module.exports = {
       },
     ],
   },
+  mode: "development", // Change to 'production' for the final build
 };
