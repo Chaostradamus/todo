@@ -1,11 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=div.id=<i class="fa fa-applediv" aria-hidden="true"></i>, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To Do List</title>
-</head>
-<body>
-    <div id="app"></div>
-</body>
+    <script defer src="main.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Form for adding todos -->
+      <form id="todo-form">
+        <input type="text" id="todo-title" placeholder="Title" required />
+        <input
+          type="text"
+          id="todo-description"
+          placeholder="Description"
+          required
+        />
+        <input type="date" id="todo-due-date" required />
+        <select id="todo-priority" required>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+        </select>
+        <button type="submit">Add Todo</button>
+      </form>
+
+      <!-- Container to display todos -->
+      <div id="todo-container"></div>
+    </div>
+  </body>
 </html>

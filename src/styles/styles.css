@@ -1,3 +1,28 @@
-body {
-  font-family: Arial, sans-serif;
+.todo-item {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #f9f9f9;
+}
+
+.todo-item h3 {
+  margin: 0 0 5px;
+}
+
+.todo-item p {
+  margin: 5px 0;
+}
+
+.todo-item button {
+  background-color: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.todo-item button:hover {
+  background-color: #ff4b4b;
 }
