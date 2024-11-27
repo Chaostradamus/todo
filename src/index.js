@@ -50,7 +50,6 @@ form.addEventListener("submit", (e) => {
   form.reset(); // Reset the form fields after submission
 });
 
-
 // Render todos
 function renderTodos(project) {
   const container = document.getElementById("todo-container");
@@ -65,14 +64,62 @@ function renderTodos(project) {
       <p>${todo.description}</p>
       <p>Due: ${todo.dueDate}</p>
       <p>Priority: ${todo.priority}</p>
+      <button data-index="${index}" class="edit-btn">Edit</button>
       <button data-index="${index}" class="delete-btn">Delete</button>
     `;
 
     container.appendChild(todoDiv);
   });
-
+  addEditListeners(project);
   addDeleteListeners(project);
 }
+
+
+function addEditListeners(project) {
+  const editButtons = document.querySelectorAll(".edit-btn");
+  editButtons.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const index = e.target.dataset.index;
+      const todoToEdit = project.todos[index];
+
+      // Pre-fill the form with the todo's details
+      titleInput.value = todoToEdit.title;
+      descriptionInput.value = todoToEdit.description;
+      dueDateInput.value = todoToEdit.dueDate;
+      prioritySelect.value = todoToEdit.priority;
+
+      // Update the submit handler to update the existing todo instead of creating a new one
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const title = titleInput.value.trim();
+        const description = descriptionInput.value.trim();
+        const dueDate = dueDateInput.value.trim();
+        const priority = prioritySelect.value.trim();
+
+        if (
+          title === "" ||
+          description === "" ||
+          dueDate === "" ||
+          priority === ""
+        ) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        // Update the todo in the project
+        todoToEdit.title = title;
+        todoToEdit.description = description;
+        todoToEdit.dueDate = dueDate;
+        todoToEdit.priority = priority;
+
+        renderTodos(project);
+        form.reset(); // Reset the form after editing
+      });
+    });
+  });
+}
+
 
 // Add delete listeners
 function addDeleteListeners(project) {
