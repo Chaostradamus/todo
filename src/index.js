@@ -104,6 +104,7 @@ function addEditListeners(project) {
           priority === ""
         ) {
           alert("Please fill in all fields.");
+          alert("Please fill in all fields.");
           return;
         }
 
