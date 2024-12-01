@@ -101,8 +101,11 @@ function addEditListeners(project) {
           title === "" ||
           description === "" ||
           dueDate === "" ||
-          priority === ""
+          // priority === ""
         ) {
+          alert("Please fill in all fields.");
+          alert("Please fill in all fields.");
+          alert("Please fill in all fields.");
           alert("Please fill in all fields.");
           alert("Please fill in all fields.");
           return;
