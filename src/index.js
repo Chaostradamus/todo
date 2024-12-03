@@ -102,6 +102,7 @@ function addEditListeners(project) {
           description === "" ||
           dueDate === "" ||
           // priority === ""
+          // chek if validations work after this check
         ) {
           alert("Please fill in all fields.");
           alert("Please fill in all fields.");
