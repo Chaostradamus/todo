@@ -1,5 +1,4 @@
 import "./styles/styles.css";
-
 import Todo from "./modules/todo";
 import Project from "./modules/project";
 
@@ -13,14 +12,27 @@ const prioritySelect = document.getElementById("todo-priority");
 // Project instance
 const myProject = new Project("First project");
 
-// Example Todo
-const myTodo = new Todo(
-  "finish project",
-  "complete the app",
-  "2024-12-01",
-  "High"
-);
-myProject.addTodo(myTodo);
+// Load todos from localStorage
+function loadFromLocalStorage() {
+  const savedTodos = localStorage.getItem("todos");
+  if (savedTodos) {
+    const todosArray = JSON.parse(savedTodos);
+    todosArray.forEach((todoData) => {
+      const todo = new Todo(
+        todoData.title,
+        todoData.description,
+        todoData.dueDate,
+        todoData.priority
+      );
+      myProject.addTodo(todo);
+    });
+  }
+}
+
+// Save todos to localStorage
+function saveToLocalStorage() {
+  localStorage.setItem("todos", JSON.stringify(myProject.todos));
+}
 
 form.addEventListener("submit", (e) => {
   e.preventDefault(); // Prevent the default form submission
@@ -30,24 +42,32 @@ form.addEventListener("submit", (e) => {
   const dueDate = dueDateInput.value.trim();
   const priority = prioritySelect.value.trim();
 
-  // Log values of the fields to inspect what they contain
-  console.log("Title:", title);
-  console.log("Description:", description);
-  console.log("Due Date:", dueDate);
-  console.log("Priority:", priority);
-
-  // Check if any of the fields are empty after trimming
+  // Check if any of the fields are empty
   if (title === "" || description === "" || dueDate === "" || priority === "") {
     alert("Please fill in all fields.");
     return; // Exit the function if fields are missing
   }
 
-  // If all fields are filled, create a new todo
-  const newTodo = new Todo(title, description, dueDate, priority);
-  myProject.addTodo(newTodo); // Add the todo to the project
+  const editingIndex = form.dataset.editingIndex;
+
+  if (editingIndex !== undefined && editingIndex !== null) {
+    // Editing an existing todo
+    const todoToEdit = myProject.todos[editingIndex];
+    todoToEdit.title = title;
+    todoToEdit.description = description;
+    todoToEdit.dueDate = dueDate;
+    todoToEdit.priority = priority;
+
+    delete form.dataset.editingIndex; // Clear the editing state
+  } else {
+    // Adding a new todo
+    const newTodo = new Todo(title, description, dueDate, priority);
+    myProject.addTodo(newTodo);
+  }
 
   renderTodos(myProject); // Re-render the todos
-  form.reset(); // Reset the form fields after submission
+  saveToLocalStorage(); // Save todos to localStorage
+  form.reset(); // Reset the form fields
 });
 
 // Render todos
@@ -74,7 +94,7 @@ function renderTodos(project) {
   addDeleteListeners(project);
 }
 
-
+// Add edit listeners
 function addEditListeners(project) {
   const editButtons = document.querySelectorAll(".edit-btn");
   editButtons.forEach((btn) => {
@@ -88,43 +108,11 @@ function addEditListeners(project) {
       dueDateInput.value = todoToEdit.dueDate;
       prioritySelect.value = todoToEdit.priority;
 
-      // Update the submit handler to update the existing todo instead of creating a new one
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const title = titleInput.value.trim();
-        const description = descriptionInput.value.trim();
-        const dueDate = dueDateInput.value.trim();
-        const priority = prioritySelect.value.trim();
-
-        if (
-          title === "" ||
-          description === "" ||
-          dueDate === "" ||
-          // priority === ""
-          // chek if validations work after this check
-        ) {
-          alert("Please fill in all fields.");
-          alert("Please fill in all fields.");
-          alert("Please fill in all fields.");
-          alert("Please fill in all fields.");
-          alert("Please fill in all fields.");
-          return;
-        }
-
-        // Update the todo in the project
-        todoToEdit.title = title;
-        todoToEdit.description = description;
-        todoToEdit.dueDate = dueDate;
-        todoToEdit.priority = priority;
-
-        renderTodos(project);
-        form.reset(); // Reset the form after editing
-      });
+      // Set the editing index on the form's dataset
+      form.dataset.editingIndex = index;
     });
   });
 }
-
 
 // Add delete listeners
 function addDeleteListeners(project) {
@@ -134,9 +122,11 @@ function addDeleteListeners(project) {
       const index = e.target.dataset.index;
       project.todos.splice(index, 1); // Remove todo from the array
       renderTodos(project); // Re-render the updated list
+      saveToLocalStorage(); // Save the updated list to localStorage
     });
   });
 }
 
 // Initial render
+loadFromLocalStorage(); // Load todos from localStorage
 renderTodos(myProject);
